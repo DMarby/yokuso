@@ -1,0 +1,6 @@
+[submodule "lua/api-gateway-aws"]
+	path = lua/api-gateway-aws
+	url = https://github.com/DMarby/api-gateway-aws.git
+[submodule "lua/api-gateway-hmac"]
+	path = lua/api-gateway-hmac
+	url = https://github.com/adobe-apiplatform/api-gateway-hmac.git
