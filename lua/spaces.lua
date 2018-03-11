@@ -1,5 +1,8 @@
 local AWSV4S = require "api-gateway.aws.AwsV4Signature"
+local purge_cache = require "purge_cache"
 local target_uri = ngx.var.uri
+local request_method = ngx.var.request_method
+local headers = ngx.req.get_headers()
 local uri_args = {}
 
 -- Read body
@@ -15,10 +18,10 @@ if not request_body then
 end
 
 -- For uploads we want to validate credentials
-if ngx.var.request_method == "PUT" then
+if request_method == "PUT" or request_method == "DELETE" then
   uri_args = ngx.req.get_uri_args() -- Set uri_args from request so that we pass them along to the request to spaces
   local client_access_key = os.getenv("CLIENT_ACCESS_KEY_ID")
-  local req_access_key, req_signed_headers, req_signature = string.match(ngx.req.get_headers()["Authorization"], ".+ Credential=(%w+)/.+, SignedHeaders=(.+), Signature=(.+)")
+  local req_access_key, req_signed_headers, req_signature = string.match(headers["Authorization"], ".+ Credential=(%w+)/.+, SignedHeaders=(.+), Signature=(.+)")
 
   -- Access key does not match
   if client_access_key ~= req_access_key then
@@ -34,10 +37,10 @@ if ngx.var.request_method == "PUT" then
 
   local headers_to_sign = {}
   for header in string.gmatch(req_signed_headers, '([^;]+)') do
-    table.insert(headers_to_sign, {header, ngx.req.get_headers()[header]})
+    table.insert(headers_to_sign, {header, headers[header]})
   end
 
-  local auth_signature = clientAuth:getSignatureWithHeaders(ngx.var.request_method, ngx.var.uri, uri_args, request_body, headers_to_sign, ngx.req.get_headers()["x-amz-date"])
+  local auth_signature = clientAuth:getSignatureWithHeaders(request_method, target_uri, uri_args, request_body, headers_to_sign, headers["x-amz-date"])
 
   -- Signature does not match
   if auth_signature ~= req_signature then
@@ -48,6 +51,11 @@ if ngx.var.request_method == "PUT" then
   if os.getenv("PATH_STYLE_URL") ~= nil then
     target_uri = string.match(target_uri, "/.+(/.+)")
     ngx.req.set_uri(target_uri)
+  end
+
+  -- Purge the cache after deleting an object
+  if request_method == "DELETE" then
+    purge_cache(target_uri, "/var/cache/nginx", "1:2")
   end
 end
 
@@ -61,7 +69,7 @@ local spaces_auth = AWSV4S:new({
 
 -- Create signature
 local authorization_header, content_hash = spaces_auth:getAuthorizationHeader(
-  ngx.var.request_method,
+  request_method,
   target_uri,
   uri_args,
   request_body,
