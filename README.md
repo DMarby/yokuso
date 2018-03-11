@@ -1,6 +1,6 @@
 # Yokusō
 [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/) proxy for [Dropshare](https://getdropsha.re/), using [OpenResty](https://openresty.org).  
-Yokusō makes it possible to use a private DigitalOcean Spaces space with Dropshare, without needing to store the API keys on your device.
+Yokusō makes it possible to use a private DigitalOcean Space with Dropshare, without needing to store the API keys on your device.  
 It also caches the requests, for faster serving of the files you upload.
 
 ## Usage
@@ -26,6 +26,11 @@ docker run \
   -e CLIENT_BUCKET_ENDPOINT="bucket.example.com" \
   yokuso:latest
 ```  
+
+If you're using path-style URLs with Dropshare, you should set the `PATH_STYLE_URL` environment variablea as well:
+```
+-e PATH_STYLE_URL=1
+```
 
 ### Configuring Dropshare
 You can now configure Dropshare, by adding a [Custom S3 API Compliant Connection](https://dropshare.zendesk.com/hc/en-us/articles/201139232-How-to-set-up-Amazon-S3-or-S3-API-compatible-connections).  

@@ -1,4 +1,5 @@
 local AWSV4S = require "api-gateway.aws.AwsV4Signature"
+local target_uri = ngx.var.uri
 local uri_args = {}
 
 -- Read body
@@ -42,6 +43,12 @@ if ngx.var.request_method == "PUT" then
   if auth_signature ~= req_signature then
     ngx.exit(403)
   end
+
+   -- Rewrite path-style url's to remove the bucket from them
+  if os.getenv("PATH_STYLE_URL") ~= nil then
+    target_uri = string.match(target_uri, "/.+(/.+)")
+    ngx.req.set_uri(target_uri)
+  end
 end
 
 local spaces_auth = AWSV4S:new({
@@ -55,7 +62,7 @@ local spaces_auth = AWSV4S:new({
 -- Create signature
 local authorization_header, content_hash = spaces_auth:getAuthorizationHeader(
   ngx.var.request_method,
-  ngx.var.uri,
+  target_uri,
   uri_args,
   request_body,
   os.getenv("BUCKET_ENDPOINT")
