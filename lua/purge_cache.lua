@@ -31,8 +31,8 @@ function cache_filename(cache_path, cache_levels, cache_key)
 end
 
 function purgeCache(request_uri, cache_path, cache_levels)
-  os.remove(cache_filename(cache_path, cache_levels, "GET" .. os.getenv("BUCKET_ENDPOINT") .. request_uri))
-  os.remove(cache_filename(cache_path, cache_levels, "HEAD" .. os.getenv("BUCKET_ENDPOINT") .. request_uri))
+  os.remove(cache_filename(cache_path, cache_levels, "GET" .. os.getenv("SPACES_ENDPOINT") .. request_uri))
+  os.remove(cache_filename(cache_path, cache_levels, "HEAD" .. os.getenv("SPACES_ENDPOINT") .. request_uri))
 end
 
 return purgeCache

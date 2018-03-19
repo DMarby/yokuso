@@ -16,14 +16,13 @@ You can now run it with the following command:
 docker run \
   -p 80:80 \
   -v /var/cache/nginx:/var/cache/nginx \
-  -e BUCKET_REGION="<SPACES_REGION>" \
+  -e SPACES_REGION="<SPACES_REGION>" \
   -e ACCESS_KEY_ID="<SPACES_ACCESS_KEY>" \
   -e SECRET_ACCESS_KEY="<SPACES_SECRET_KEY>" \
-  -e BUCKET_ENDPOINT="<SPACES_BUCKET_URL>" \
+  -e SPACES_ENDPOINT="<SPACES_URL>" \
   -e ROOT_REDIRECT="http://google.com" \
   -e CLIENT_ACCESS_KEY_ID="<DROPSHARE_ACCESS_KEY>" \
   -e CLIENT_SECRET_ACCESS_KEY="<DROPSHARE_ACCESS_KEY>" \
-  -e CLIENT_BUCKET_ENDPOINT="bucket.example.com" \
   yokuso:latest
 ```  
 
@@ -34,7 +33,7 @@ If you're using path-style URLs with Dropshare, you should set the `PATH_STYLE_U
 
 ### Configuring Dropshare
 You can now configure Dropshare, by adding a [Custom S3 API Compliant Connection](https://dropshare.zendesk.com/hc/en-us/articles/201139232-How-to-set-up-Amazon-S3-or-S3-API-compatible-connections).  
-For access key and secret key, enter the values you specified in `CLIENT_ACCESS_KEY_ID` and `CLIENT_SECRET_ACCESS_KEY` above. Note that the `CLIENT_BUCKET_ENDPOINT` above needs to be the `<BUCKET_NAME>.<SERVER>` that you specify in your Dropshare configuration.
+For access key and secret key, enter the values you specified in `CLIENT_ACCESS_KEY_ID` and `CLIENT_SECRET_ACCESS_KEY` above.
 
 ## Thanks to
 * [Kamal Nasser](https://kamal.io) for making the error page.

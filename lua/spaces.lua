@@ -60,7 +60,7 @@ if request_method == "PUT" or request_method == "DELETE" then
 end
 
 local spaces_auth = AWSV4S:new({
-  aws_region = os.getenv("BUCKET_REGION"),
+  aws_region = os.getenv("SPACES_REGION"),
   aws_access_key = os.getenv("ACCESS_KEY_ID"),
   aws_secret_key = os.getenv("SECRET_ACCESS_KEY"),
   aws_service = "s3",
@@ -73,7 +73,7 @@ local authorization_header, content_hash = spaces_auth:getAuthorizationHeader(
   target_uri,
   uri_args,
   request_body,
-  os.getenv("BUCKET_ENDPOINT")
+  os.getenv("SPACES_ENDPOINT")
 )
 
 -- Set required headers
