@@ -19,6 +19,10 @@ end
 
 -- For uploads we want to validate credentials
 if request_method == "PUT" or request_method == "DELETE" then
+  if headers["Authorization"] == nil then
+    ngx.exit(403)
+  end
+
   uri_args = ngx.req.get_uri_args() -- Set uri_args from request so that we pass them along to the request to spaces
   local client_access_key = os.getenv("CLIENT_ACCESS_KEY_ID")
   local req_access_key, req_signed_headers, req_signature = string.match(headers["Authorization"], ".+ Credential=(%w+)/.+, SignedHeaders=(.+), Signature=(.+)")
