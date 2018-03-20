@@ -1,7 +1,7 @@
 # Yokusō
 [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/) proxy for [Dropshare](https://getdropsha.re/), using [OpenResty](https://openresty.org).  
 Yokusō makes it possible to use a private DigitalOcean Space with Dropshare, without needing to store the API keys on your device.  
-It also caches the requests, for faster serving of the files you upload.
+It also caches the requests, to serve the files you upload faster.
 
 ## Usage
 
@@ -26,13 +26,19 @@ docker run \
   yokuso:latest
 ```  
 
-If you're using path-style URLs with Dropshare, you should set the `PATH_STYLE_URL` environment variablea as well:
+If you're using path-style URLs with Dropshare, you should set the `PATH_STYLE_URL` environment variable as well:
 ```
 -e PATH_STYLE_URL=1
 ```
 
 ### Configuring Dropshare
-You can now configure Dropshare, by adding a [Custom S3 API Compliant Connection](https://dropshare.zendesk.com/hc/en-us/articles/201139232-How-to-set-up-Amazon-S3-or-S3-API-compatible-connections).  
+You can configure Dropshare by adding a [Custom S3 API Compliant Connection](https://dropshare.zendesk.com/hc/en-us/articles/201139232-How-to-set-up-Amazon-S3-or-S3-API-compatible-connections).  
+
+If you are not using path-style URLs, Yokusō will need to run on a subdomain.
+Set the `server` in drop share to the main domain, and `bucket name` to the subdomain (e.g. if Yokusō is running on `dump.dmarby.se`, the `server` would be `dmarby.se`, and the `bucket name` would be `dump`.  
+
+If you are using path-style URLs, set the `server` to the domain where Yokusō is running, and the `bucket name` to anything.  
+
 For access key and secret key, enter the values you specified in `CLIENT_ACCESS_KEY_ID` and `CLIENT_SECRET_ACCESS_KEY` above.
 
 ## Thanks to
