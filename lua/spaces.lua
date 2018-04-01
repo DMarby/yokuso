@@ -25,7 +25,7 @@ if request_method == "PUT" or request_method == "DELETE" then
 
   uri_args = ngx.req.get_uri_args() -- Set uri_args from request so that we pass them along to the request to spaces
   local client_access_key = os.getenv("CLIENT_ACCESS_KEY_ID")
-  local req_access_key, req_signed_headers, req_signature = string.match(headers["Authorization"], ".+ Credential=(%w+)/.+, SignedHeaders=(.+), Signature=(.+)")
+  local req_access_key, date, req_signed_headers, req_signature = string.match(headers["Authorization"], ".+ Credential=(%w+)/(%w+)/.+, SignedHeaders=(.+), Signature=(.+)")
 
   -- Access key does not match
   if client_access_key ~= req_access_key then
@@ -44,7 +44,7 @@ if request_method == "PUT" or request_method == "DELETE" then
     table.insert(headers_to_sign, {header, headers[header]})
   end
 
-  local auth_signature = clientAuth:getSignatureWithHeaders(request_method, target_uri, uri_args, request_body, headers_to_sign, headers["x-amz-date"])
+  local auth_signature = clientAuth:getSignatureWithHeaders(request_method, target_uri, uri_args, request_body, headers_to_sign, headers["x-amz-date"], date)
 
   -- Signature does not match
   if auth_signature ~= req_signature then
