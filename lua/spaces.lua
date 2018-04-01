@@ -4,6 +4,9 @@ local target_uri = ngx.var.uri
 local request_method = ngx.var.request_method
 local headers = ngx.req.get_headers()
 local uri_args = {}
+local space_name = string.match(ngx.var.host, "(.-)%..*")
+local starts_with = require "util"
+
 
 -- Read body
 ngx.req.read_body()
@@ -40,7 +43,7 @@ if request_method == "PUT" or request_method == "DELETE" then
   })
 
   local headers_to_sign = {}
-  for header in string.gmatch(req_signed_headers, '([^;]+)') do
+  for header in string.gmatch(req_signed_headers, "([^;]+)") do
     table.insert(headers_to_sign, {header, headers[header]})
   end
 
@@ -51,8 +54,8 @@ if request_method == "PUT" or request_method == "DELETE" then
     ngx.exit(403)
   end
 
-   -- Rewrite path-style url's to remove the bucket from them
-  if os.getenv("PATH_STYLE_URL") ~= nil then
+  -- Rewrite path-style url's to remove the space name from them
+  if starts_with(target_uri, "/" .. space_name) then
     target_uri = string.match(target_uri, "/.+(/.+)")
     ngx.req.set_uri(target_uri)
   end

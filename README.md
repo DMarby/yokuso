@@ -26,11 +26,6 @@ docker run \
   yokuso:latest
 ```  
 
-If you're using path-style URLs with Dropshare, you should set the `PATH_STYLE_URL` environment variable as well:
-```
--e PATH_STYLE_URL=1
-```
-
 ### Configuring Dropshare
 You can configure Dropshare by adding a [Custom S3 API Compliant Connection](https://dropshare.zendesk.com/hc/en-us/articles/201139232-How-to-set-up-Amazon-S3-or-S3-API-compatible-connections).  
 
